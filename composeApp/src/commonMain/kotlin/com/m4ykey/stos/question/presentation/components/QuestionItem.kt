@@ -30,7 +30,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun QuestionItem(
     modifier: Modifier = Modifier,
-    question: Question
+    question: Question,
+    onQuestionClick : (Int) -> Unit
 ) {
     val formattedReputation = formatReputation(question.owner.reputation)
     val formattedDate = formatCreationDate(question.creationDate.toLong())
@@ -39,7 +40,7 @@ fun QuestionItem(
         modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth()
-            .clickable {  }
+            .clickable { onQuestionClick(question.questionId) }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()

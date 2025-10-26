@@ -2,6 +2,7 @@ package com.m4ykey.stos.question.data.network
 
 import com.m4ykey.stos.core.model.Items
 import com.m4ykey.stos.core.network.setParameters
+import com.m4ykey.stos.question.data.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.network.model.QuestionDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -29,6 +30,18 @@ class QuestionService(
                     "sort" to sort,
                     "order" to order
                 )
+            }
+        }.body()
+    }
+
+    override suspend fun getQuestionById(
+        filter: String,
+        id: Int
+    ): Items<QuestionDetailDto> {
+        return client.get {
+            url {
+                appendPathSegments("questions/$id")
+                setParameters("filter" to filter)
             }
         }.body()
     }

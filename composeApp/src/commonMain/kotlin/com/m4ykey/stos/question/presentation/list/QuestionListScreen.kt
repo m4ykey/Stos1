@@ -39,7 +39,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionListScreen(
-    viewModel: QuestionListViewModel = koinViewModel()
+    viewModel: QuestionListViewModel = koinViewModel(),
+    onQuestionClick : (Int) -> Unit
 ) {
     val questions = viewModel.getQuestionsFlow().collectAsLazyPagingItems()
     val viewState by viewModel.questionListState.collectAsStateWithLifecycle()
@@ -54,6 +55,7 @@ fun QuestionListScreen(
         viewModel.listUiEvent.collectLatest { event ->
             when (event) {
                 is ListUiEvent.ChangeSort -> viewModel.updateSort(event.sort)
+                is ListUiEvent.OnQuestionClick -> onQuestionClick(event.id)
                 else -> null
             }
         }
@@ -110,12 +112,16 @@ fun QuestionListContent(
         BasePagingList(
             itemContent = { question ->
                 QuestionItem(
-                    question = question
+                    question = question,
+                    onQuestionClick = {
+                        onAction(QuestionListAction.OnQuestionClick(question.questionId))
+                    }
                 )
             },
             items = questions,
             modifier = Modifier.fillMaxWidth(),
-            listState = listState
+            listState = listState,
+            itemKey = { it.questionId }
         )
     }
 }

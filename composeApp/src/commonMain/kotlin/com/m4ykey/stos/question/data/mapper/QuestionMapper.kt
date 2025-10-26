@@ -1,11 +1,28 @@
 package com.m4ykey.stos.question.data.mapper
 
 import com.m4ykey.stos.question.data.network.model.BadgeCountsDto
+import com.m4ykey.stos.question.data.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.network.model.QuestionDto
 import com.m4ykey.stos.question.data.network.model.QuestionOwnerDto
 import com.m4ykey.stos.question.domain.model.BadgeCounts
 import com.m4ykey.stos.question.domain.model.Question
+import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionOwner
+
+fun QuestionDetailDto.toDomain() = QuestionDetail(
+    answerCount = answerCount ?: 0,
+    bodyMarkdown = bodyMarkdown.orEmpty(),
+    creationDate = creationDate ?: 0,
+    downVoteCount = downVoteCount ?: 0,
+    lastActivityDate = lastActivityDate ?: 0,
+    link = link.orEmpty(),
+    questionId = questionId ?: 0,
+    title = title.orEmpty(),
+    viewCount = viewCount ?: 0,
+    tags = tags.orEmpty(),
+    upVoteCount = upVoteCount ?: 0,
+    owner = owner?.toDomain() ?: QuestionOwner.EMPTY
+)
 
 fun BadgeCountsDto.toDomain() = BadgeCounts(
     bronze = bronze ?: 0,

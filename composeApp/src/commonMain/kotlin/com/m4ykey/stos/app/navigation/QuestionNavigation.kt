@@ -7,6 +7,18 @@ import com.m4ykey.stos.question.presentation.list.QuestionListScreen
 
 fun NavGraphBuilder.questionNavigation(navHostController: NavHostController) {
     composable(Route.QuestionHome.route) {
-        QuestionListScreen()
+        QuestionListScreen(
+            onQuestionClick = { id ->
+                navHostController.navigate(Route.QuestionDetail.route(id)) {
+                    launchSingleTop = true
+                }
+            }
+        )
+    }
+    composable(
+        route = Route.QuestionDetail.routeWithArgs,
+        arguments = Route.QuestionDetail.arguments
+    ) { navBackStackEntry ->
+
     }
 }

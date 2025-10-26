@@ -1,13 +1,21 @@
 package com.m4ykey.stos.question.domain.usecase
 
 import androidx.paging.PagingData
+import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.question.domain.model.Question
+import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import kotlinx.coroutines.flow.Flow
 
 class QuestionUseCase(
     private val repository: QuestionRepository
 ) {
+
+    fun getQuestionById(
+        id : Int
+    ) : Flow<ApiResult<QuestionDetail>> {
+        return repository.getQuestionById(id = id)
+    }
 
     fun getQuestions(
         page : Int = 1,

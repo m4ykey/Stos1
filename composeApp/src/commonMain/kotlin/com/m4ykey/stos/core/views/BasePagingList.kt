@@ -11,11 +11,17 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import kotlinx.coroutines.delay
 
 private val defaultLoading : @Composable () -> Unit = { DefaultLoading() }
 private val defaultError : @Composable (Throwable?) -> Unit = { DefaultError(it) }
@@ -34,9 +40,28 @@ fun <T: Any> BasePagingList(
     emptyContent : @Composable () -> Unit = defaultEmpty,
     modifier : Modifier = Modifier
 ) {
-    when (val refreshState = items.loadState.refresh) {
+    var showLoading by remember { mutableStateOf(false) }
+
+    val refreshState = items.loadState.refresh
+    val isRefreshing = refreshState is LoadState.Loading
+
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            showLoading = false
+            delay(300L)
+            showLoading = true
+        } else {
+            showLoading = false
+        }
+    }
+
+    when (refreshState) {
         is LoadState.Loading -> {
-            loadingContent()
+            if (showLoading) {
+                loadingContent()
+            } else if (items.itemCount == 0) {
+                loadingContent()
+            }
         }
 
         is LoadState.Error -> {

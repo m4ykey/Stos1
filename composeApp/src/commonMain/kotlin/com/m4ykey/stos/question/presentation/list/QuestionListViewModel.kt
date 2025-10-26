@@ -49,6 +49,7 @@ class QuestionListViewModel(
         viewModelScope.launch {
             val event = when (action) {
                 is QuestionListAction.OnSortClick -> ListUiEvent.ChangeSort(action.sort)
+                is QuestionListAction.OnQuestionClick -> ListUiEvent.OnQuestionClick(action.id)
             }
             _listUiEvent.emit(event)
         }
