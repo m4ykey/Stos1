@@ -9,8 +9,13 @@ class QuestionUseCase(
     private val repository: QuestionRepository
 ) {
 
-    fun getQuestions(page : Int, pageSize : Int, sort : String) : Flow<PagingData<Question>> {
-        return repository.getQuestions(page, pageSize, sort)
+    fun getQuestions(
+        page : Int = 1,
+        pageSize : Int = 20,
+        sort : String,
+        order : String
+    ) : Flow<PagingData<Question>> {
+        return repository.getQuestions(page, pageSize, sort, order)
     }
 
 }

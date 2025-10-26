@@ -9,20 +9,23 @@ import com.m4ykey.stos.question.domain.model.Question
 
 class QuestionPaging(
     private val service : RemoteQuestionService,
-    private val sort : String
+    private val sort : String,
+    private val order : String
 ) : BasePagingSource<Question>() {
 
     override suspend fun loadData(
         page: Int,
         pageSize: Int
     ): Result<List<Question>> {
-        return when (val result = safeApi { service.getQuestions(page, pageSize, sort = sort) }) {
-            is ApiResult.Failure -> {
-                Result.failure(result.exception)
-            }
-            is ApiResult.Success -> {
-                val questions = result.data.items.map { it.toDomain() }
-                Result.success(questions)
+        return safeApi {
+            service.getQuestions(page, pageSize, sort = sort, order = order)
+        }.run {
+            when (this) {
+                is ApiResult.Failure -> Result.failure(exception)
+                is ApiResult.Success -> {
+                    val questions = data.items.map { it.toDomain() }
+                    Result.success(questions)
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.m4ykey.stos.core.views.TextMarkdown
 import com.m4ykey.stos.owner.presentation.components.OwnerCard
 import com.m4ykey.stos.question.domain.model.Question
 import kmp_stos.composeapp.generated.resources.Res
@@ -51,7 +52,7 @@ fun QuestionItem(
             )
             Spacer(modifier = Modifier.width(5.dp))
             Column(modifier = modifier.fillMaxWidth()) {
-                Text(
+                TextMarkdown(
                     text = question.owner.displayName,
                     fontSize = 14.sp
                 )
@@ -61,7 +62,7 @@ fun QuestionItem(
                 )
             }
         }
-        Text(
+        TextMarkdown(
             text = question.title
         )
         QuestionStatsRow(

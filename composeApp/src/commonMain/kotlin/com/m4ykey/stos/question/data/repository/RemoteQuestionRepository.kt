@@ -19,12 +19,13 @@ class RemoteQuestionRepository(
     override fun getQuestions(
         page: Int,
         pageSize: Int,
-        sort: String
+        sort: String,
+        order : String
     ): Flow<PagingData<Question>> {
         return Pager(
             config = pagingConfig,
             pagingSourceFactory = {
-                QuestionPaging(service = remoteQuestionService, sort = sort)
+                QuestionPaging(service = remoteQuestionService, sort = sort, order = order)
             }
         ).flow.flowOn(dispatcherIO)
     }

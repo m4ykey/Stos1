@@ -89,6 +89,7 @@ kotlin {
             implementation(libs.ktor.client.encoding)
             implementation(libs.androidx.paging.compose)
             implementation(libs.androidx.paging.common)
+            implementation(libs.slf4j)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

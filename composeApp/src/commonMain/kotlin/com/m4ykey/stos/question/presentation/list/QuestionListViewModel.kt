@@ -25,9 +25,6 @@ class QuestionListViewModel(
     private val useCase: QuestionUseCase
 ) : ViewModel() {
 
-    private val page = 1
-    private val pageSize = 20
-
     private val _questionListState = MutableStateFlow(QuestionListState())
     val questionListState = _questionListState.asStateFlow()
 
@@ -40,9 +37,8 @@ class QuestionListViewModel(
         .debounce(1000L)
         .flatMapLatest { (sort, order) ->
             useCase.getQuestions(
-                page = page,
-                pageSize = pageSize,
-                sort = sort.name
+                sort = sort.name,
+                order = order.name
             )
         }
         .cachedIn(viewModelScope)

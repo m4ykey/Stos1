@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface QuestionRepository {
 
-    fun getQuestions(page : Int, pageSize : Int, sort : String) : Flow<PagingData<Question>>
+    fun getQuestions(page : Int, pageSize : Int, sort : String, order : String) : Flow<PagingData<Question>>
 
 }

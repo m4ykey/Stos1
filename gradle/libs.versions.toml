@@ -29,6 +29,7 @@ koin = "4.1.1"
 ksp = "2.2.20-2.0.4"
 compottie = "2.0.2"
 sqlite = "2.6.1"
+slf4j = "2.0.17"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -89,6 +90,8 @@ sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.r
 compottie = { group = "io.github.alexzhirkevich", name = "compottie", version.ref = "compottie" }
 compottie-dot = { group = "io.github.alexzhirkevich", name = "compottie-dot", version.ref = "compottie" }
 compottie-network = { group = "io.github.alexzhirkevich", name = "compottie-network", version.ref = "compottie" }
+
+slf4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
