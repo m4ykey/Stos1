@@ -8,14 +8,15 @@ import com.m4ykey.stos.question.data.network.RemoteQuestionService
 import com.m4ykey.stos.question.domain.model.Question
 
 class QuestionPaging(
-    private val service : RemoteQuestionService
+    private val service : RemoteQuestionService,
+    private val sort : String
 ) : BasePagingSource<Question>() {
 
     override suspend fun loadData(
         page: Int,
         pageSize: Int
     ): Result<List<Question>> {
-        return when (val result = safeApi { service.getQuestions(page, pageSize) }) {
+        return when (val result = safeApi { service.getQuestions(page, pageSize, sort = sort) }) {
             is ApiResult.Failure -> {
                 Result.failure(result.exception)
             }

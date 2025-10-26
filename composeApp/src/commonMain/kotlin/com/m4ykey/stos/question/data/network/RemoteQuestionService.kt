@@ -10,7 +10,7 @@ interface RemoteQuestionService {
         page : Int,
         pageSize : Int,
         filter : String = QUESTION_FILTER,
-        sort : String = "hot",
+        sort : String,
         order : String = "desc"
     ) : Items<QuestionDto>
 

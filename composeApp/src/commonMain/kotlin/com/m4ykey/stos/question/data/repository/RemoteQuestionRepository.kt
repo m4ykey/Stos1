@@ -24,7 +24,7 @@ class RemoteQuestionRepository(
         return Pager(
             config = pagingConfig,
             pagingSourceFactory = {
-                QuestionPaging(service = remoteQuestionService)
+                QuestionPaging(service = remoteQuestionService, sort = sort)
             }
         ).flow.flowOn(dispatcherIO)
     }

@@ -44,14 +44,12 @@ fun QuestionListScreen(
 ) {
     val questions = viewModel.getQuestionsFlow().collectAsLazyPagingItems()
     val viewState by viewModel.questionListState.collectAsStateWithLifecycle()
-    val sort by rememberUpdatedState(viewState.sort)
+    val sort = viewState.sort
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val lazyListState = rememberSaveable(saver = LazyListState.Saver) {
-        LazyListState()
-    }
+    val lazyListState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
 
-    val currentOnAction by rememberUpdatedState(newValue = viewModel::onAction)
+    val onAction = viewModel::onAction
 
     LaunchedEffect(Unit) {
         viewModel.listUiEvent.collectLatest { event ->
@@ -84,7 +82,7 @@ fun QuestionListScreen(
             listState = lazyListState,
             questions = questions,
             sort = sort,
-            onAction = currentOnAction
+            onAction = onAction
         )
     }
 }
