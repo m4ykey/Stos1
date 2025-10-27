@@ -3,6 +3,7 @@ package com.m4ykey.stos.question.domain.usecase
 import androidx.paging.PagingData
 import com.m4ykey.stos.core.network.ApiResult
 import com.m4ykey.stos.question.domain.model.Question
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +11,12 @@ import kotlinx.coroutines.flow.Flow
 class QuestionUseCase(
     private val repository: QuestionRepository
 ) {
+
+    fun getQuestionsAnswer(
+        id : Int
+    ) : Flow<ApiResult<List<QuestionAnswer>>> {
+        return repository.getQuestionsAnswer(id = id)
+    }
 
     fun getQuestionById(
         id : Int

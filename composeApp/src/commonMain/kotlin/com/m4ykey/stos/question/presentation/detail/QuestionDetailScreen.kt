@@ -9,15 +9,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -37,8 +40,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.m4ykey.stos.core.views.TextMarkdown
 import com.m4ykey.stos.owner.presentation.components.OwnerCard
 import com.m4ykey.stos.question.data.mapper.toQuestion
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionOwner
+import com.m4ykey.stos.question.presentation.components.AnswerItem
 import com.m4ykey.stos.question.presentation.components.ChipItem
 import com.m4ykey.stos.question.presentation.components.QuestionStatsRow
 import com.m4ykey.stos.question.presentation.components.badge.BadgeRow
@@ -59,16 +64,19 @@ fun QuestionDetailScreen(
     onNavBack : () -> Unit
 ) {
     val detailState by viewModel.questionDetailState.collectAsStateWithLifecycle()
+    val answerState by viewModel.questionAnswerState.collectAsStateWithLifecycle()
 
-    val loading = detailState.loading
-    val error = detailState.errorMessage
+    val loading = detailState.loading || answerState.loading
+    val error = detailState.errorMessage ?: answerState.errorMessage
+
     val detail = detailState.question
+    val answers = answerState.answer
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val listState = rememberLazyListState()
 
     LaunchedEffect(id) {
-        viewModel.loadQuestionDetail(id)
+        viewModel.loadQuestions(id)
     }
 
     Scaffold(
@@ -100,7 +108,8 @@ fun QuestionDetailScreen(
                     QuestionDetailContent(
                         paddingValues = padding,
                         item = detail,
-                        listState = listState
+                        listState = listState,
+                        answers = answers
                     )
                 }
                 else -> {
@@ -120,7 +129,8 @@ fun QuestionDetailContent(
     modifier : Modifier = Modifier,
     item : QuestionDetail,
     paddingValues: PaddingValues,
-    listState : LazyListState
+    listState : LazyListState,
+    answers : List<QuestionAnswer>
 ) {
     LazyColumn(
         state = listState,
@@ -161,9 +171,25 @@ fun QuestionDetailContent(
             )
         }
         item {
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        item {
             Text(
-                text = "${stringResource(resource = Res.string.answers)}: ${item.answerCount}"
+                text = "${stringResource(resource = Res.string.answers)}: ${item.answerCount}",
+                fontSize = 14.sp
             )
+        }
+        items(
+            items = answers,
+            key = { it.answerId },
+            contentType = { "answer_item" }
+        ) { answer ->
+            AnswerItem(
+                answer = answer,
+                owner = answer.owner
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 5.dp))
         }
     }
 }

@@ -42,34 +42,29 @@ import dev.snipme.highlights.model.SyntaxThemes
 val coil3ImageTransfer = object : ImageTransformer {
     @Composable
     override fun transform(link: String): ImageData? {
-        val cleanUrl = link.trim().let { url ->
-            when {
-                url.isBlank() -> null
-                url.startsWith("//") -> "https:$url"
-                url.startsWith("/") -> null
-                url.startsWith("http://") && !url.startsWith("https://") -> "https://$url"
-                else -> url
+        val cleanUrl = remember(link) {
+            link.trim().let { url ->
+                when {
+                    url.isBlank() -> null
+                    url.startsWith("//") -> "https:$url"
+                    url.startsWith("/") -> null
+                    url.startsWith("http://") && !url.startsWith("https://") -> "https://$url"
+                    else -> url
+                }
             }
-        }
-
-        if (cleanUrl == null) return null
-
-        var imageState by remember { mutableStateOf<AsyncImagePainter.State>(AsyncImagePainter.State.Empty) }
-
-        val cachePolicy = CachePolicy.ENABLED
+        } ?: return null
 
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalPlatformContext.current)
                 .data(cleanUrl)
                 .crossfade(true)
-                .diskCachePolicy(cachePolicy)
-                .networkCachePolicy(cachePolicy)
-                .memoryCachePolicy(cachePolicy)
-                .build(),
-            onState = { state ->
-                imageState = state
-            }
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .networkCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .build()
         )
+
+        var imageState by remember { mutableStateOf<AsyncImagePainter.State>(AsyncImagePainter.State.Empty) }
 
         return when (imageState) {
             is AsyncImagePainter.State.Error -> null
@@ -114,6 +109,10 @@ fun TextMarkdown(
     fontWeight: FontWeight = FontWeight.Normal
 ) {
     val isDarkTheme = isSystemInDarkTheme()
+
+    val markdownContent = remember(text) {
+        text.htmlDecode().trimIndent()
+    }
 
     val highlightBuilder = remember(isDarkTheme) {
         Highlights.Builder().theme(SyntaxThemes.atom(darkMode = isDarkTheme))
@@ -168,7 +167,7 @@ fun TextMarkdown(
             imageTransformer = coil3ImageTransfer,
             typography = customTypography,
             components = customComponents,
-            content = text.htmlDecode().trimIndent()
+            content = markdownContent
         )
     }
 }

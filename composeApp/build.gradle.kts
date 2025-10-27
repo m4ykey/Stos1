@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -22,25 +21,11 @@ val versionMajor = versionProperties["versionMajor"].toString().toInt()
 val versionMinor = versionProperties["versionMinor"].toString().toInt()
 val versionPatch = versionProperties["versionPatch"].toString().toInt()
 
-val namespace = "com.m4ykey.stos"
-
 kotlin {
-    mingwX64("desktop") {
-        binaries {
-            executable {
-                entryPoint = namespace
-            }
-        }
-    }
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
         }
-    }
-
-    composeCompiler {
-        featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
     }
 
     listOf(
@@ -116,11 +101,11 @@ kotlin {
 }
 
 android {
-    namespace = namespace
+    namespace = "com.m4ykey.stos"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = namespace
+        applicationId = "com.m4ykey.stos"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100
@@ -157,7 +142,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
-            packageName = namespace
+            packageName = "com.m4ykey.stos"
             packageVersion = "$versionMajor.$versionMinor.$versionPatch"
         }
     }

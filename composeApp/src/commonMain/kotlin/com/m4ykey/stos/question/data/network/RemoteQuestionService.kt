@@ -1,12 +1,19 @@
 package com.m4ykey.stos.question.data.network
 
+import com.m4ykey.stos.core.Filters.QUESTION_ANSWER_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_DETAIL_FILTER
 import com.m4ykey.stos.core.Filters.QUESTION_FILTER
 import com.m4ykey.stos.core.model.Items
+import com.m4ykey.stos.question.data.network.model.QuestionAnswerDto
 import com.m4ykey.stos.question.data.network.model.QuestionDetailDto
 import com.m4ykey.stos.question.data.network.model.QuestionDto
 
 interface RemoteQuestionService {
+
+    suspend fun getQuestionsAnswers(
+        filter : String = QUESTION_ANSWER_FILTER,
+        id : Int
+    ) : Items<QuestionAnswerDto>
 
     suspend fun getQuestions(
         page : Int,

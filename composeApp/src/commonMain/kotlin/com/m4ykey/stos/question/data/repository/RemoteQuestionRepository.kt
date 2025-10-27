@@ -9,6 +9,7 @@ import com.m4ykey.stos.question.data.mapper.toDomain
 import com.m4ykey.stos.question.data.network.RemoteQuestionService
 import com.m4ykey.stos.question.data.paging.QuestionPaging
 import com.m4ykey.stos.question.domain.model.Question
+import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.repository.QuestionRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,6 +21,20 @@ class RemoteQuestionRepository(
     private val remoteQuestionService: RemoteQuestionService,
     private val dispatcherIO : CoroutineDispatcher
 ) : QuestionRepository {
+
+    override fun getQuestionsAnswer(id: Int): Flow<ApiResult<List<QuestionAnswer>>> {
+        return flow {
+            val result = safeApi { remoteQuestionService.getQuestionsAnswers(id = id) }
+
+            when (result) {
+                is ApiResult.Failure -> emit(ApiResult.Failure(result.exception))
+                is ApiResult.Success -> {
+                    val answers = result.data.items.map { it.toDomain() }
+                    emit(ApiResult.Success(answers))
+                }
+            }
+        }.flowOn(dispatcherIO)
+    }
 
     override fun getQuestionById(id: Int): Flow<ApiResult<QuestionDetail>> {
         return flow {

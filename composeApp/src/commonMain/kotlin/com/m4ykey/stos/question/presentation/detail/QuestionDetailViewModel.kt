@@ -17,7 +17,55 @@ class QuestionDetailViewModel(
     private val _questionDetailState = MutableStateFlow(QuestionDetailState())
     val questionDetailState = _questionDetailState.asStateFlow()
 
-    fun loadQuestionDetail(id: Int) {
+    private val _questionAnswerState = MutableStateFlow(QuestionAnswerState())
+    val questionAnswerState = _questionAnswerState.asStateFlow()
+
+    fun loadQuestions(id : Int) {
+        loadQuestionAnswer(id)
+        loadQuestionDetail(id)
+    }
+
+    private fun loadQuestionAnswer(id : Int) {
+        _questionAnswerState.update {
+            it.copy(
+                loading = true,
+                errorMessage = null
+            )
+        }
+
+        viewModelScope.launch {
+            useCase.getQuestionsAnswer(id)
+                .catch { exception ->
+                    _questionAnswerState.update {
+                        it.copy(loading = false, errorMessage = exception.message)
+                    }
+                }
+                .collect { result ->
+                    handleApiResult(
+                        result = result,
+                        success = { data ->
+                            _questionAnswerState.update {
+                                it.copy(
+                                    loading = false,
+                                    answer = data
+                                )
+                            }
+                        },
+                        failure = { msg ->
+                            _questionAnswerState.update {
+                                it.copy(
+                                    loading = false,
+                                    answer = emptyList(),
+                                    errorMessage = msg
+                                )
+                            }
+                        }
+                    )
+                }
+        }
+    }
+
+    private fun loadQuestionDetail(id: Int) {
         _questionDetailState.update {
             it.copy(
                 loading = true,
