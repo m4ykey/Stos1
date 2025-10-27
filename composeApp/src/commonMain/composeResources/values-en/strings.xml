@@ -23,4 +23,8 @@
     <string name="hours">h</string>
 
     <string name="search">Search</string>
+    <string name="back">Back</string>
+
+    <string name="asked">Asked</string>
+    <string name="answers">Answers</string>
 </resources>

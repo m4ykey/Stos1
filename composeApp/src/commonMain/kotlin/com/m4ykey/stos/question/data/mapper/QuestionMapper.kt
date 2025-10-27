@@ -9,6 +9,17 @@ import com.m4ykey.stos.question.domain.model.Question
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionOwner
 
+fun QuestionDetail.toQuestion() = Question(
+    title = title,
+    answerCount = answerCount,
+    owner = owner,
+    creationDate = creationDate,
+    downVoteCount = downVoteCount,
+    questionId = questionId,
+    upVoteCount = upVoteCount,
+    viewCount = viewCount
+)
+
 fun QuestionDetailDto.toDomain() = QuestionDetail(
     answerCount = answerCount ?: 0,
     bodyMarkdown = bodyMarkdown.orEmpty(),

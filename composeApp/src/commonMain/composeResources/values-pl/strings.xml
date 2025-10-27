@@ -23,4 +23,8 @@
     <string name="hours">godz.</string>
 
     <string name="search">Szukaj</string>
+    <string name="back">Wróć</string>
+
+    <string name="asked">Zapytano</string>
+    <string name="answers">Odpowiedzi</string>
 </resources>
