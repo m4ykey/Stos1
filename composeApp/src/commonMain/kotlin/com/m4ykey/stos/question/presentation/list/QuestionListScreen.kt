@@ -5,6 +5,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,10 +20,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,9 +37,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,6 +62,7 @@ import kmp_stos.composeapp.generated.resources.order
 import kmp_stos.composeapp.generated.resources.search
 import kmp_stos.composeapp.generated.resources.select_order
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -67,6 +74,7 @@ fun QuestionListScreen(
 ) {
     val questions = viewModel.getQuestionsFlow().collectAsLazyPagingItems()
     val viewState by viewModel.questionListState.collectAsStateWithLifecycle()
+
     val sort = viewState.sort
     val order = viewState.order
 
@@ -76,6 +84,14 @@ fun QuestionListScreen(
     val onAction = viewModel::onAction
 
     var showDialog by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    val showScrollToTopButton by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 30 || lazyListState.firstVisibleItemScrollOffset > 0
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.listUiEvent.collectLatest { event ->
@@ -109,6 +125,31 @@ fun QuestionListScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = showScrollToTopButton,
+                enter = slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth }
+                ),
+                exit = slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth }
+                )
+            ) {
+                FloatingActionButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            lazyListState.animateScrollToItem(0)
+                        }
+                    },
+                    content = {
+                        Icon(
+                            contentDescription = null,
+                            imageVector = Icons.Default.ArrowUpward
+                        )
+                    }
+                )
+            }
         }
     ) { padding ->
         QuestionListContent(

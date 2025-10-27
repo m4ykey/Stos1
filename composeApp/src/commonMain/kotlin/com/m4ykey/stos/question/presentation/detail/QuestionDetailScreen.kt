@@ -16,13 +16,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.m4ykey.stos.core.views.AnimationImage
 import com.m4ykey.stos.core.views.TextMarkdown
 import com.m4ykey.stos.owner.presentation.components.OwnerCard
 import com.m4ykey.stos.question.data.mapper.toQuestion
@@ -102,7 +107,26 @@ fun QuestionDetailScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 error != null -> {
-
+                    Card(
+                        shape = RoundedCornerShape(50.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(vertical = 16.dp)
+                            .align(Alignment.Center)
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .fillMaxWidth()
+                        ) {
+                            AnimationImage()
+                            Text(text = error)
+                        }
+                    }
                 }
                 detail != null -> {
                     QuestionDetailContent(
@@ -145,6 +169,11 @@ fun QuestionDetailContent(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold
             )
+        }
+        item {
+            Spacer(modifier = Modifier.height(5.dp))
+        }
+        item {
             TextMarkdown(
                 text = item.bodyMarkdown
             )
