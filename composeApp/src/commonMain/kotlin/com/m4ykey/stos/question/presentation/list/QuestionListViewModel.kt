@@ -49,6 +49,7 @@ class QuestionListViewModel(
         viewModelScope.launch {
             val event = when (action) {
                 is QuestionListAction.OnSortClick -> ListUiEvent.ChangeSort(action.sort)
+                is QuestionListAction.OnOrderClick -> ListUiEvent.ChangeOrder(action.order)
                 is QuestionListAction.OnQuestionClick -> ListUiEvent.OnQuestionClick(action.id)
             }
             _listUiEvent.emit(event)
@@ -57,6 +58,10 @@ class QuestionListViewModel(
 
     fun updateSort(sort : QuestionSort) {
         _questionListState.update { it.copy(sort = sort) }
+    }
+
+    fun updateOrder(order : QuestionOrder) {
+        _questionListState.update { it.copy(order = order) }
     }
 
 }
