@@ -22,4 +22,18 @@ sealed class Route(val route : String) {
         fun getIdKey() : String = ID_KEY
     }
 
+    object QuestionTag {
+        private const val ID_TAG = "tagged"
+        const val base = "question_tag"
+
+        const val routeWithArgs = "$base/{$ID_TAG}"
+
+        val arguments = listOf(
+            navArgument(ID_TAG) { type = NavType.StringType }
+        )
+
+        fun route(tag : String) = "$base/$tag"
+        fun getIdTag() : String = ID_TAG
+    }
+
 }

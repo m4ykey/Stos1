@@ -1,4 +1,4 @@
-package com.m4ykey.stos.question.presentation.components
+package com.m4ykey.stos.question.presentation.components.chip
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow

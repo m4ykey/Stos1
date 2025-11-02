@@ -14,6 +14,29 @@ class QuestionService(
     private val client : HttpClient
 ) : RemoteQuestionService {
 
+    override suspend fun getQuestionsByTag(
+        filter: String,
+        page: Int,
+        pageSize: Int,
+        sort: String,
+        order: String,
+        tagged: String
+    ): Items<QuestionDto> {
+        return client.get {
+            url {
+                appendPathSegments("questions")
+                setParameters(
+                    "filter" to filter,
+                    "page" to page,
+                    "pagesize" to pageSize,
+                    "sort" to sort,
+                    "order" to order,
+                    "tagged" to tagged
+                )
+            }
+        }.body()
+    }
+
     override suspend fun getQuestionsAnswers(
         filter: String,
         id: Int

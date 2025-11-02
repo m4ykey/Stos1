@@ -12,6 +12,16 @@ class QuestionUseCase(
     private val repository: QuestionRepository
 ) {
 
+    fun getQuestionsByTag(
+        page : Int = 1,
+        pageSize : Int = 20,
+        sort : String,
+        order : String,
+        tagged : String
+    ) : Flow<PagingData<Question>> {
+        return repository.getQuestionsByTag(page = page, pageSize = pageSize, order = order, tagged = tagged, sort = sort)
+    }
+
     fun getQuestionsAnswer(
         id : Int
     ) : Flow<ApiResult<List<QuestionAnswer>>> {

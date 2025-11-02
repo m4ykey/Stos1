@@ -49,7 +49,7 @@ import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionOwner
 import com.m4ykey.stos.question.presentation.components.AnswerItem
-import com.m4ykey.stos.question.presentation.components.ChipItem
+import com.m4ykey.stos.question.presentation.components.chip.ChipItem
 import com.m4ykey.stos.question.presentation.components.QuestionStatsRow
 import com.m4ykey.stos.question.presentation.components.badge.BadgeRow
 import com.m4ykey.stos.question.presentation.components.formatCreationDate
@@ -58,6 +58,7 @@ import kmp_stos.composeapp.generated.resources.Res
 import kmp_stos.composeapp.generated.resources.answers
 import kmp_stos.composeapp.generated.resources.asked
 import kmp_stos.composeapp.generated.resources.back
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -66,7 +67,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun QuestionDetailScreen(
     id : Int,
     viewModel : QuestionDetailViewModel = koinViewModel(),
-    onNavBack : () -> Unit
+    onBack : (() -> Unit),
+    onTagClick : (String) -> Unit
 ) {
     val detailState by viewModel.questionDetailState.collectAsStateWithLifecycle()
     val answerState by viewModel.questionAnswerState.collectAsStateWithLifecycle()
@@ -80,6 +82,16 @@ fun QuestionDetailScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val listState = rememberLazyListState()
 
+    val onAction = viewModel::onAction
+
+    LaunchedEffect(Unit) {
+        viewModel.detailUiEvent.collectLatest { event ->
+            when (event) {
+                is DetailUiEvent.TagClick -> onTagClick(event.tag)
+            }
+        }
+    }
+
     LaunchedEffect(id) {
         viewModel.loadQuestions(id)
     }
@@ -91,7 +103,7 @@ fun QuestionDetailScreen(
                 scrollBehavior = scrollBehavior,
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = onNavBack) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             contentDescription = stringResource(resource = Res.string.back),
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack
@@ -133,7 +145,8 @@ fun QuestionDetailScreen(
                         paddingValues = padding,
                         item = detail,
                         listState = listState,
-                        answers = answers
+                        answers = answers,
+                        onAction = onAction
                     )
                 }
                 else -> {
@@ -154,7 +167,8 @@ fun QuestionDetailContent(
     item : QuestionDetail,
     paddingValues: PaddingValues,
     listState : LazyListState,
-    answers : List<QuestionAnswer>
+    answers : List<QuestionAnswer>,
+    onAction: (QuestionDetailAction) -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -179,7 +193,12 @@ fun QuestionDetailContent(
             )
         }
         item {
-            TagListWrap(tags = item.tags)
+            TagListWrap(
+                tags = item.tags,
+                onTagClick = { tag ->
+                    onAction(QuestionDetailAction.OnTagClick(tag))
+                }
+            )
         }
         item {
             QuestionStatsRow(
@@ -249,7 +268,8 @@ fun DisplayOwner(
 
 @Composable
 fun TagListWrap(
-    tags : List<String>
+    tags : List<String>,
+    onTagClick : (String) -> Unit
 ) {
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
@@ -261,7 +281,7 @@ fun TagListWrap(
                 title = label,
                 modifier = Modifier,
                 selected = false,
-                onSelect = {}
+                onSelect = { onTagClick(label) }
             )
         }
     }

@@ -28,4 +28,13 @@ interface RemoteQuestionService {
         id : Int
     ) : Items<QuestionDetailDto>
 
+    suspend fun getQuestionsByTag(
+        filter: String = QUESTION_FILTER,
+        page : Int,
+        pageSize : Int,
+        sort : String,
+        order : String,
+        tagged : String
+    ) : Items<QuestionDto>
+
 }
