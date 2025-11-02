@@ -86,7 +86,11 @@ fun <T: Any> BasePagingList(
                         items(
                             count = items.itemCount,
                             contentType = { "paged_item" },
-                            key = { index -> items[index]?.let { itemKey(it) } ?: index }
+                            key = { index ->
+                                val item = items[index]
+                                if (item != null) itemKey(item)
+                                else "placeholder_$index"
+                            }
                         ) { index ->
                             items[index]?.let { item ->
                                 itemContent(item)

@@ -4,15 +4,8 @@ import com.mohamedrejeb.ksoup.entities.KsoupEntities
 
 fun String.decodeHtml() : String {
     var result = KsoupEntities.decodeHtml(this)
-    result = result.replaceWhitespace().fixImageReferences()
+    result = result.fixImageReferences().trim()
     return result
-}
-
-private fun String.replaceWhitespace(): String {
-    return this.replace("\t", "    ")
-        .replace("\r\n", "\n")
-        .replace("\r", "\n")
-        .replace("(?<!\n)\n(?!\n)".toRegex(), "  \n")
 }
 
 private fun String.fixImageReferences(): String {
