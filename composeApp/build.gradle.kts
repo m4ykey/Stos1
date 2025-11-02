@@ -85,6 +85,8 @@ kotlin {
             implementation(libs.androidx.paging.compose)
             implementation(libs.androidx.paging.common)
             implementation(libs.slf4j)
+            implementation(libs.ksoup.html)
+            implementation(libs.ksoup.entities)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -21,7 +21,7 @@ serialization = "1.9.0"
 datetime = "0.7.1"
 ktor = "3.3.1"
 coil3 = "3.3.0"
-markdown = "0.37.0"
+markdown = "0.38.1"
 room = "2.8.3"
 aboutLibraries = "13.1.0"
 koin = "4.1.1"
@@ -29,6 +29,7 @@ ksp = "2.3.0"
 compottie = "2.0.2"
 sqlite = "2.6.1"
 slf4j = "2.0.17"
+ksoup = "0.6.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -90,6 +91,9 @@ compottie-dot = { group = "io.github.alexzhirkevich", name = "compottie-dot", ve
 compottie-network = { group = "io.github.alexzhirkevich", name = "compottie-network", version.ref = "compottie" }
 
 slf4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
+
+ksoup-html = { group = "com.mohamedrejeb.ksoup", name = "ksoup-html", version.ref = "ksoup" }
+ksoup-entities = { group = "com.mohamedrejeb.ksoup", name = "ksoup-entities", version.ref = "ksoup" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

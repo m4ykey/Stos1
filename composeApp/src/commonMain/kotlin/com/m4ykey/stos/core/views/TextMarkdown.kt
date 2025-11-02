@@ -111,7 +111,7 @@ fun TextMarkdown(
     val isDarkTheme = isSystemInDarkTheme()
 
     val markdownContent = remember(text) {
-        text.htmlDecode().trimIndent()
+        text.decodeHtml().trimIndent()
     }
 
     val highlightBuilder = remember(isDarkTheme) {
