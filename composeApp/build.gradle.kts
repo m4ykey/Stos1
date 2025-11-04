@@ -11,6 +11,8 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.gms)
+    alias(libs.plugins.crashlytics)
 }
 
 val versionProperties = Properties().apply {
@@ -52,6 +54,8 @@ kotlin {
             implementation(libs.coil3.network.okhttp)
             implementation(libs.androidx.browser)
             implementation(libs.androidx.paging.runtime)
+            implementation(libs.firebase.analytics)
+            implementation(libs.firebase.crashlytics)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

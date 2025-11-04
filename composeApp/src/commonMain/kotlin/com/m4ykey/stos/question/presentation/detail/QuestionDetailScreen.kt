@@ -16,17 +16,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -41,7 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.m4ykey.stos.core.views.AnimationImage
+import com.m4ykey.stos.core.network.openBrowser
 import com.m4ykey.stos.core.views.TextMarkdown
 import com.m4ykey.stos.owner.presentation.components.OwnerCard
 import com.m4ykey.stos.question.data.mapper.toQuestion
@@ -49,6 +46,7 @@ import com.m4ykey.stos.question.domain.model.QuestionAnswer
 import com.m4ykey.stos.question.domain.model.QuestionDetail
 import com.m4ykey.stos.question.domain.model.QuestionOwner
 import com.m4ykey.stos.question.presentation.components.AnswerItem
+import com.m4ykey.stos.question.presentation.components.ErrorCard
 import com.m4ykey.stos.question.presentation.components.chip.ChipItem
 import com.m4ykey.stos.question.presentation.components.QuestionStatsRow
 import com.m4ykey.stos.question.presentation.components.badge.BadgeRow
@@ -58,6 +56,7 @@ import kmp_stos.composeapp.generated.resources.Res
 import kmp_stos.composeapp.generated.resources.answers
 import kmp_stos.composeapp.generated.resources.asked
 import kmp_stos.composeapp.generated.resources.back
+import kmp_stos.composeapp.generated.resources.link
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -86,9 +85,7 @@ fun QuestionDetailScreen(
 
     LaunchedEffect(Unit) {
         viewModel.detailUiEvent.collectLatest { event ->
-            when (event) {
-                is DetailUiEvent.TagClick -> onTagClick(event.tag)
-            }
+            if (event is DetailUiEvent.TagClick) onTagClick(event.tag)
         }
     }
 
@@ -109,44 +106,37 @@ fun QuestionDetailScreen(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack
                         )
                     }
+                },
+                actions = {
+                    val link = detail?.link
+                    if (!link.isNullOrEmpty()) {
+                        IconButton(onClick = { openBrowser(link) }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Public,
+                                contentDescription = stringResource(Res.string.link)
+                            )
+                        }
+                    }
                 }
             )
         }
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
             when {
-                loading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
+                loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 error != null -> {
-                    Card(
-                        shape = RoundedCornerShape(50.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .padding(vertical = 16.dp)
-                            .align(Alignment.Center)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .padding(20.dp)
-                                .fillMaxWidth()
-                        ) {
-                            AnimationImage()
-                            Text(text = error)
-                        }
-                    }
+                    ErrorCard(
+                        modifier = Modifier.align(Alignment.Center),
+                        error = error
+                    )
                 }
                 detail != null -> {
                     QuestionDetailContent(
-                        paddingValues = padding,
                         item = detail,
                         listState = listState,
                         answers = answers,
-                        onAction = onAction
+                        onAction = onAction,
+                        paddingValues = padding
                     )
                 }
                 else -> {
@@ -172,9 +162,7 @@ fun QuestionDetailContent(
 ) {
     LazyColumn(
         state = listState,
-        modifier = modifier
-            .padding(paddingValues)
-            .padding(horizontal = 10.dp),
+        modifier = modifier.padding(paddingValues = paddingValues).padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
@@ -184,14 +172,7 @@ fun QuestionDetailContent(
                 fontWeight = FontWeight.SemiBold
             )
         }
-        item {
-            Spacer(modifier = Modifier.height(5.dp))
-        }
-        item {
-            TextMarkdown(
-                text = item.bodyMarkdown
-            )
-        }
+        item { TextMarkdown(text = item.bodyMarkdown) }
         item {
             TagListWrap(
                 tags = item.tags,
@@ -214,12 +195,7 @@ fun QuestionDetailContent(
             )
         }
         item {
-            DisplayOwner(
-                item = item.owner
-            )
-        }
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
+            DisplayOwner(item = item.owner)
         }
         item {
             Text(

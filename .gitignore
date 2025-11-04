@@ -19,3 +19,4 @@ captures
 node_modules/
 .kotlin/sessions
 .idea
+/composeApp/google-services.json

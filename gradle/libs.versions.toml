@@ -30,6 +30,10 @@ compottie = "2.0.2"
 sqlite = "2.6.1"
 slf4j = "2.0.17"
 ksoup = "0.6.0"
+gms = "4.4.4"
+firebase-analytics = "23.0.0"
+firebase-crashlytics = "20.0.3"
+crashlytics = "3.0.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -95,6 +99,9 @@ slf4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 ksoup-html = { group = "com.mohamedrejeb.ksoup", name = "ksoup-html", version.ref = "ksoup" }
 ksoup-entities = { group = "com.mohamedrejeb.ksoup", name = "ksoup-entities", version.ref = "ksoup" }
 
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebase-crashlytics" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -106,6 +113,8 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
+gms = { id = "com.google.gms.google-services", version.ref = "gms" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 
 [bundles]
 markdown = [

@@ -8,8 +8,11 @@ import org.koin.android.ext.koin.androidContext
 class StosApp : Application() {
 
     companion object {
-        lateinit var appContext : Context
-            private set
+        private var appContext : Context? = null
+
+        fun getContext() : Context {
+            return appContext!!
+        }
     }
 
     override fun onCreate() {
