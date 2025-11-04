@@ -16,5 +16,6 @@ fun AppNavHost(
         startDestination = Route.QuestionHome.route
     ) {
         questionNavigation(navHostController)
+        searchNavigation(navHostController)
     }
 }

@@ -14,6 +14,11 @@ fun NavGraphBuilder.questionNavigation(navHostController: NavHostController) {
                 navHostController.navigate(Route.QuestionDetail.route(id)) {
                     launchSingleTop = true
                 }
+            },
+            onSearch = {
+                navHostController.navigate(Route.Search.route) {
+                    launchSingleTop = true
+                }
             }
         )
     }

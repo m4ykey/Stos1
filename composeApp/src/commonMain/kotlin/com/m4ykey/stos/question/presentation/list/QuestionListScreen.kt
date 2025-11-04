@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,14 +26,18 @@ import com.m4ykey.stos.question.domain.model.Question
 import com.m4ykey.stos.question.presentation.components.BaseQuestionListScreen
 import com.m4ykey.stos.question.presentation.components.chip.ChipList
 import com.m4ykey.stos.question.presentation.components.QuestionItem
+import kmp_stos.composeapp.generated.resources.Res
+import kmp_stos.composeapp.generated.resources.search
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionListScreen(
     viewModel: QuestionListViewModel = koinViewModel(),
-    onQuestionClick : (Int) -> Unit
+    onQuestionClick : (Int) -> Unit,
+    onSearch : () -> Unit
 ) {
     val questions = viewModel.getQuestionsFlow().collectAsLazyPagingItems()
     val viewState by viewModel.questionListState.collectAsState()
@@ -49,7 +57,15 @@ fun QuestionListScreen(
         questions = questions,
         viewState = viewState,
         onAction = onAction,
-        onQuestionClick = onQuestionClick
+        onQuestionClick = onQuestionClick,
+        actions = {
+            IconButton(onClick = onSearch) {
+                Icon(
+                    contentDescription = stringResource(Res.string.search),
+                    imageVector = Icons.Default.Search
+                )
+            }
+        }
     )
 }
 

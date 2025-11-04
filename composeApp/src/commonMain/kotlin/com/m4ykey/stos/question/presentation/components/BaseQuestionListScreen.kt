@@ -3,6 +3,7 @@ package com.m4ykey.stos.question.presentation.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -44,7 +45,8 @@ fun BaseQuestionListScreen(
     questions : LazyPagingItems<Question>,
     viewState : QuestionListState,
     onAction : (QuestionListAction) -> Unit,
-    onQuestionClick: (Int) -> Unit
+    onQuestionClick: (Int) -> Unit,
+    actions : @Composable RowScope.() -> Unit = {}
 ) {
     val sort = viewState.sort
     val order = viewState.order
@@ -84,6 +86,7 @@ fun BaseQuestionListScreen(
                             imageVector = Icons.Default.Reorder
                         )
                     }
+                    actions()
                 }
             )
         },

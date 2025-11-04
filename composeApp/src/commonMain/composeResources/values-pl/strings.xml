@@ -29,6 +29,8 @@
     <string name="search">Szukaj</string>
     <string name="back">Wróć</string>
 
+    <string name="popular_tags">Popularne Tagi</string>
+
     <string name="asked">Zapytano</string>
     <string name="answers">Odpowiedzi</string>
     <string name="link">Link</string>

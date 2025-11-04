@@ -29,6 +29,8 @@
     <string name="search">Search</string>
     <string name="back">Back</string>
 
+    <string name="popular_tags">Popular Tags</string>
+
     <string name="asked">Asked</string>
     <string name="answers">Answers</string>
     <string name="link">Link</string>

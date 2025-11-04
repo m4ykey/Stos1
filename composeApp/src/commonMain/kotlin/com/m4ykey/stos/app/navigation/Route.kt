@@ -6,6 +6,7 @@ import androidx.navigation.navArgument
 sealed class Route(val route : String) {
 
     object QuestionHome : Route(route = "question_home")
+    object Search : Route(route = "search")
 
     object QuestionDetail {
         private const val ID_KEY = "id"
@@ -34,6 +35,23 @@ sealed class Route(val route : String) {
 
         fun route(tag : String) = "$base/$tag"
         fun getIdTag() : String = ID_TAG
+    }
+
+    object SearchList {
+        private const val ID_TAG = "tag"
+        private const val ID_IN_TITLE = "inTitle"
+        const val base = "search_list"
+
+        const val routeWithArgs = "$base/{inTitle}/{tag}"
+
+        val arguments = listOf(
+            navArgument("inTitle") { type = NavType.StringType },
+            navArgument("tag") { type = NavType.StringType }
+        )
+
+        fun route(inTitle : String, tag : String) = "$base/$inTitle/$tag"
+        fun getIdTag() : String = ID_TAG
+        fun getIdInTitle() : String = ID_IN_TITLE
     }
 
 }
